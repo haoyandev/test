@@ -4,6 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Extract Version
+        id: version_tag
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       - uses: actions/checkout@master
       - name: Publish to Docker Repository
         uses: elgohr/Publish-Docker-Github-Action@master
@@ -11,3 +15,4 @@ jobs:
           name: haoyan9601/test
           username: ${{secrets.DOCKER_USERNAME}}
           password: ${{secrets.DOCKER_PASSWORD}}
+          tag: ${{steps.version_tag.outputs.branch}}
