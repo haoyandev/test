@@ -1,21 +1,4 @@
-# name: Build and Publish Docker
-# on: [push]
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Extract Version
-#         id: version_tag
-#         run: |
-#           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-#       - uses: actions/checkout@master
-#       - name: Publish to Docker Repository
-#         uses: elgohr/Publish-Docker-Github-Action@master
-#         with:
-#           name: haoyan9601/test
-#           username: ${{secrets.DOCKER_USERNAME}}
-#           password: ${{secrets.DOCKER_PASSWORD}}
-#           tag_names: true
+
 
 
 name: Publish Docker image   # workflow名称，可以在Github项目主页的【Actions】中看到所有的workflow
@@ -23,14 +6,17 @@ name: Publish Docker image   # workflow名称，可以在Github项目主页的�
 on:   # 配置触发workflow的事件
   push:
     branches:   # master分支有push时触发此workflow
-      - 'master'
+      - master
+      - develop
     tags:       # tag更新时触发此workflow
       - '*'
-
+  pull_request:
+# test
 jobs:  # workflow中的job
 
   push_to_registry:  # job的名字
     name: Push Docker image to Docker Hub
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true || github.event_name == 'push' }}
     runs-on: ubuntu-latest   # job运行的基础环境
 
     steps:  # 一个job由一个或多个step组成
