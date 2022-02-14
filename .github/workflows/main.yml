@@ -16,6 +16,7 @@ jobs:  # workflow中的job
 
   push_to_registry:  # job的名字
     name: Push Docker image to Docker Hub
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true || github.event_name == 'push' }}
     runs-on: ubuntu-latest   # job运行的基础环境
 
     steps:  # 一个job由一个或多个step组成
